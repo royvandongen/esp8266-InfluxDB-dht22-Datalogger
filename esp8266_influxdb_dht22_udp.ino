@@ -70,6 +70,7 @@ unsigned long   lastInfluxDBupdate  = 0;
 
 void setup(void) {
   Serial.begin ( 115200 );
+  WiFi.mode(WIFI_STA);
   WiFi.begin ( AP_SSID, AP_PASSWORD );
   Serial.println ( "" );
   // Wait for connection
