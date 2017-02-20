@@ -26,6 +26,10 @@
  * Ground --------------------------------
  */
 #include <ESP8266WiFi.h>
+#include <DNSServer.h>            //Local DNS Server used for redirecting all requests to the configuration portal
+#include <ESP8266WebServer.h>     //Local WebServer used to serve the configuration portal
+#include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager WiFi Configuration Magic
+
 #include <WiFiUdp.h>
 #include <TimeLib.h>
 #include <DHT.h>
@@ -34,16 +38,11 @@
 #define DHTPIN  2
 DHT dht(DHTPIN, DHTTYPE);
 
-//WiFi Settings
-#define AP_SSID     "YourSSID"
-#define AP_PASSWORD "YourPassword"
-WiFiClient client;
-
 //InfluxDB Server
-#define INFLUXDB_SERVER        "something.something.something"  // Your InfluxDB Server FQDN
+#define INFLUXDB_SERVER        "stats.home.qonnect-it.nl"       // Your InfluxDB Server FQDN
 #define INFLUXDB_PORT          8089                             // Default InfluxDB UDP Port
 #define INFLUXDB_INTERVAL      10000                            // Milliseconds between measurements 
-String SENSOR_LOCATION      =  "livingroom";                      // This location is used for the "device=" part of the InfluxDB update
+String SENSOR_LOCATION      =  "workroom";                    // This location is used for the "device=" part of the InfluxDB update
 WiFiUDP udp;
 
 //Time settings
@@ -70,18 +69,15 @@ unsigned long   lastInfluxDBupdate  = 0;
 
 void setup(void) {
   Serial.begin ( 115200 );
-  WiFi.mode(WIFI_STA); //Do not host an AP after boot
-  WiFi.begin ( AP_SSID, AP_PASSWORD );
-  Serial.println ( "" );
-  // Wait for connection
-  while ( WiFi.status() != WL_CONNECTED ) {
-    delay ( 500 );
-    Serial.print ( "." );                              
-  }
 
-  Serial.println ( "" );
-  Serial.print ( "Connected to " );
-  Serial.println ( AP_SSID );
+  WiFiManager wifiManager;
+  //reset saved settings
+  //wifiManager.resetSettings();
+  
+  String ssid = "SENSOR-DHT22-" + String(ESP.getChipId());
+  wifiManager.autoConnect(ssid.c_str()); 
+
+  Serial.print ( "Connected to your network" );
   Serial.print ( "IP address: " );
   Serial.println ( WiFi.localIP() );
 
