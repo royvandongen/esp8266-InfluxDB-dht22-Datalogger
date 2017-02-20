@@ -39,10 +39,10 @@
 DHT dht(DHTPIN, DHTTYPE);
 
 //InfluxDB Server
-#define INFLUXDB_SERVER        "stats.home.qonnect-it.nl"       // Your InfluxDB Server FQDN
+#define INFLUXDB_SERVER        "something.something.something"  // Your InfluxDB Server FQDN
 #define INFLUXDB_PORT          8089                             // Default InfluxDB UDP Port
 #define INFLUXDB_INTERVAL      10000                            // Milliseconds between measurements 
-String SENSOR_LOCATION      =  "workroom";                    // This location is used for the "device=" part of the InfluxDB update
+String SENSOR_LOCATION      =  "workroom";                      // This location is used for the "device=" part of the InfluxDB update
 WiFiUDP udp;
 
 //Time settings
