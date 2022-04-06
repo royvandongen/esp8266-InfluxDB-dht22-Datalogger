@@ -9,6 +9,8 @@
  * version 2 as published by the Free Software Foundation.
  */
 
+/* Please use Arduino JSON library version 5 */
+
 
 /*
  * Schema
@@ -118,9 +120,9 @@ void setup(void) {
   }
 
   WiFiManagerParameter custom_influxdb_server("server", "InfluxDB Server", INFLUXDB_SERVER, 40);
-  WiFiManagerParameter custom_influxdb_port("port", "8089", INFLUXDB_PORT, 5);
-  WiFiManagerParameter custom_influxdb_interval("interval", "10000", INFLUXDB_INTERVAL, 6);
-  WiFiManagerParameter custom_sensor_location("location", "Location", SENSOR_LOCATION, 6);
+  WiFiManagerParameter custom_influxdb_port("port", "InfluxDB Port (8089)", INFLUXDB_PORT, 5);
+  WiFiManagerParameter custom_influxdb_interval("interval", "Sensor Interval (seconds)", INFLUXDB_INTERVAL, 6);
+  WiFiManagerParameter custom_sensor_location("location", "Sensor ID/Location", SENSOR_LOCATION, 6);
 
   WiFiManager wifiManager;
   //reset saved settings
@@ -205,8 +207,11 @@ void loop(void) {
   }
   time_t t = now();
 
-  // only send update to InfluxDB every INFLUXDB_INTERVAL
-  if(millis()-lastInfluxDBupdate > atoi(INFLUXDB_INTERVAL)) {
+  // only send update to InfluxDB every INFLUXDB_INTERVAL * 1000
+  int INFLUXDB_INTERVAL_INT = atoi(INFLUXDB_INTERVAL);
+  int INFLUXDB_INTERVAL_MILLIS = INFLUXDB_INTERVAL_INT * 1000;
+  
+  if(millis()-lastInfluxDBupdate > INFLUXDB_INTERVAL_MILLIS) {
     lastInfluxDBupdate = millis();
 
     sendData(t);
