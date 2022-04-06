@@ -46,7 +46,7 @@ DHT dht(DHTPIN, DHTTYPE);
 //InfluxDB Server
 char INFLUXDB_SERVER[40];             // Your InfluxDB Server FQDN
 char INFLUXDB_PORT[5] = "8089";       // Default InfluxDB UDP Port
-char INFLUXDB_INTERVAL[6] = "10000";  // Milliseconds between measurements 
+char INFLUXDB_INTERVAL[6] = "600";    // Seconds between measurements (600 secs is 10 minutes)
 char SENSOR_LOCATION[20] = "test";    // This location is used for the "device=" part of the InfluxDB update
 
 //flag for saving data
