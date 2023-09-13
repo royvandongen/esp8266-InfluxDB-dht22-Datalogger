@@ -49,6 +49,9 @@ char INFLUXDB_PORT[5] = "8089";       // Default InfluxDB UDP Port
 char INFLUXDB_INTERVAL[6] = "600";    // Seconds between measurements (600 secs is 10 minutes)
 char SENSOR_LOCATION[20] = "test";    // This location is used for the "device=" part of the InfluxDB update
 
+// Setting this to true, resets ALL settings
+bool resetSettings = false;
+
 //flag for saving data
 bool shouldSaveConfig = false;
 
@@ -109,6 +112,15 @@ void setup(void) {
   //reset saved settings
   //wifiManager.resetSettings();
 
+  if (resetSettings) {
+    Serial.println("Reset settings is true, resetting settings now!");
+    SPIFFS.remove("/config.json");
+    wifiManager.resetSettings();
+    ESP.eraseConfig(); 
+    delay(2000);
+    ESP.reset(); 
+  }
+  
   wifiManager.setSaveConfigCallback(saveConfigCallback);
 
   wifiManager.addParameter(&custom_influxdb_server);
